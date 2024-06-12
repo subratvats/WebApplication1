@@ -20,7 +20,8 @@ steps:
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '8.x'
+    version: '6.x'
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
@@ -32,6 +33,6 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configration $(BuildConfiguration)'
+    arguments: '--configration $(buildConfiguration)'
 
 
