@@ -7,9 +7,7 @@ trigger:
 - master
 
 pool:
-  # vmImage: 'windows-latest'
-  vmImage: 'ubuntu-latest'
-
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
@@ -17,24 +15,15 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '8.x'
-
 - task: NuGetToolInstaller@1
-  inputs:
-    versionSpec: '6.x'
 
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
 
-- task: DotNetCoreCLI@2
-  displayName: Build
+- task: VSBuild@1
   inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configration $(buildConfiguration)''--no-restore'
-
-
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
